@@ -30,6 +30,7 @@
                 this.chatSocket.send(JSON.stringify({
                     'message': this.message_text
                 }));
+                // this.message_text = '';
             },
         },
         mounted() {

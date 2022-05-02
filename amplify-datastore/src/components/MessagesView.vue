@@ -1,6 +1,7 @@
 <template>
     <div class="place__messages">
-        <div v-for="item in items" :key="item.message">
+        <notifications group="error_message" />
+        <div v-for="item in getMessages" :key="item.message">
             <div class="place__message">
                 <div class="place__item_message" v-bind:class="item.class">
                     {{item.message}}
@@ -12,33 +13,59 @@
 </template>
 
 <script>
+    import {
+        mapGetters
+    } from 'vuex'
     export default ({
         name: 'MessagesView',
+        computed: mapGetters(['getMessages']),
         data: function () {
             return {
                 items: [
-                    {
-                        class: 'item_0',
-                        message: 'Test'
-                    },
-                    {
-                        class: 'item_1',
-                        message: 'Test test 2'
-                    }
+                    // {
+                    //     class: 'item_0',
+                    //     message: 'Test'
+                    // },
+                    // {
+                    //     class: 'item_1',
+                    //     message: 'Test test 2'
+                    // }
                 ],
+                users_len: 0,
+                methods: {
+                    send: (data) => {
+                        // console.log('this', this.items);
+                        // console.log('data', data);
+                        // this.items.push(data);
+                        console.log(this.$store);
+                        this.$store.dispatch('SET_Messages', data);
+                    },
+                    error: (data) => {
+                        this.$notify({
+                            group: 'error_message',
+                            title: 'Important message',
+                            type: 'error',
+                            text: data.message
+                        });
+                    },
+                    users_len: (data) => {
+                        this.users_len = data.len;
+                        this.$store.state.users_len = this.users_len;
+                    }
+                }
             }
         },
         mounted() {
             this.chatSocket = this.socket.getConnectSocet();
             this.chatSocket.onmessage = (e) => {
                 var data = JSON.parse(e.data);
-                this.items.push(data);
+                if (this.methods[data['event']]) {
+                    this.methods[data['event']](data);
+                }
             };
-            this.chatSocket.onclose = function() {
-                console.error('Chat socket closed unexpectedly');
-            };
+
         },
-        hide(){
+        hide() {
             this.socket.disconnect();
         }
     })
@@ -47,6 +74,7 @@
     .place__messages {
         width: 100%;
         height: 100%;
+        overflow-y: auto;
     }
 
     .place__message {
@@ -56,7 +84,6 @@
     .place__item_message {
         border-radius: 5px;
         padding: 5px;
-        overflow: scroll;
     }
 
     .item_0 {

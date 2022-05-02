@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import App from './App.vue'
 import socket from './utils/socket'
+import Notifications from 'vue-notification'
+import store from './store'
 // import VueSocketIO from 'vue-socket.io'
 
 Vue.config.productionTip = false
@@ -17,7 +19,10 @@ Vue.prototype.socket = socket
 //   },
 //   options: { path: "/my-app/" } //Optional options
 // }))
+Vue.use(Notifications)
+
 
 new Vue({
+  store,
   render: h => h(App),
 }).$mount('#app')

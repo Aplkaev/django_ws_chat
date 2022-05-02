@@ -6,9 +6,15 @@
                 <InputMessanger />
             </div>
         </div>
+        <div class="user_len">
+            Количество людей в комнате: {{ lenUsersRoom }}
+        </div>
     </div>
 </template>
 <script>
+    import {
+        mapGetters
+    } from 'vuex'
     import MessagesView from './MessagesView.vue';
     import InputMessanger from './InputMessanger.vue';
     export default ({
@@ -17,11 +23,24 @@
             MessagesView,
             InputMessanger
         },
+        // computed: {
+        //     lenUsersRoom(state) {
+        //         return this.$store.getters.lenUsersRoom;
+        //     }
+        // },
+        computed:mapGetters(['lenUsersRoom']),
         data: function () {
             return {
+                users_len: 0,
+                methods: {
+                    // users_len: (data) => {
+                    //     this.users_len = data.len;
+                    // }
+                }
             }
         },
-        mounted(){
+        mounted() {
+
         }
     })
 </script>
@@ -47,5 +66,11 @@
         -webkit-box-shadow: 3px 4px 32px -14px rgba(34, 60, 80, 0.2) inset;
         -moz-box-shadow: 3px 4px 32px -14px rgba(34, 60, 80, 0.2) inset;
         box-shadow: 3px 4px 32px -14px rgba(34, 60, 80, 0.2) inset;
+    }
+
+    .user_len {
+        position: absolute;
+        left: 10px;
+        top: 10px;
     }
 </style>
