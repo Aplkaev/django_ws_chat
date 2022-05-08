@@ -1,0 +1,89 @@
+.place__conteiner {
+    width: 100vw;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.place__border, 
+.place__input_room {
+    /* border: 1px solid; */
+    display: flex;
+    flex-direction: column;
+    height: 90%;
+    width: 100%;
+    max-width: 800px;
+    backdrop-filter: #000;
+    -webkit-box-shadow: 3px 4px 32px -14px rgba(34, 60, 80, 0.2) inset;
+    -moz-box-shadow: 3px 4px 32px -14px rgba(34, 60, 80, 0.2) inset;
+    box-shadow: 3px 4px 32px -14px rgba(34, 60, 80, 0.2) inset;
+}
+
+.place__input_room {
+    -webkit-box-shadow: unset;
+    -moz-box-shadow: unset;
+    box-shadow: unset;
+}
+
+.user_len {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+}
+
+.place__messages {
+    width: 100%;
+    height: 90vh;
+    overflow-y: auto;
+}
+
+.place__message {
+    margin: 1em;
+}
+
+.place__item_message {
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.item_0 {
+    background: rgb(247, 93, 34);
+}
+
+.item_1 {
+    background: rgb(128, 10, 115);
+    color: #fff;
+}
+
+.item_2 {
+    background: rgb(136, 147, 37);
+}
+
+.item_3 {
+    background: rgb(110, 2, 253);
+}
+
+.item_4 {
+    background: rgb(52, 101, 130);
+}
+
+.item_5 {
+    background: rgb(208, 126, 84);
+}
+
+.item_6 {
+    background: rgb(237, 111, 254);
+}
+
+.item_7 {
+    background: rgb(37, 4, 207);
+}
+
+.item_8 {
+    background: rgb(37, 4, 207);
+}
+
+.item_9 {
+    background: rgb(37, 4, 207);
+}
