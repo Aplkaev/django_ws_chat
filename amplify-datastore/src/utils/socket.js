@@ -1,14 +1,35 @@
+export default {
+    // название комнаты
+    roomName: 'test',
+    // подключение к ws
+    _connect: null,
 
-export default{
-    roomName:'test',
-    _connect:null,
-    getConnectSocet(){
-        if(this._connect === undefined || !this._connect){
+    setNameRoom(name) {
+        /**
+         * 
+         * Задаем данные для сокет
+         * 
+         */
+        this.roomName = name;
+    },
+    getConnectSocet() {
+        /**
+         * 
+         * Получаем подключение к ws
+         * Если не подключено, то подключаемся
+         *  
+         */
+        if (this._connect === undefined || !this._connect) {
             this.connect();
         }
         return this._connect;
     },
-    connect(){
+    connect() {
+        /**
+         * 
+         * Подключение к ws
+         * 
+         */
         this._connect = new WebSocket(
             'ws://127.0.0.1:8000/ws/chat/' + this.roomName + '/');
         console.log('done socket', this._connect);
@@ -16,8 +37,13 @@ export default{
             console.error('Chat socket closed unexpectedly');
         };
     },
-    disconnect(){
-        if(this._connect === undefined || !this._connect){
+    disconnect() {
+        /**
+         * 
+         * Отключение от ws
+         * 
+         */
+        if (this._connect === undefined || !this._connect) {
             return;
         }
         this._connect.close();
