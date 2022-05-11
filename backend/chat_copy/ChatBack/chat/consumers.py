@@ -4,7 +4,8 @@ import json
 
 
 class ChatConsumer(WebsocketConsumer):
-    my_rooms = {}
+    # хранит количество людей в комнатах
+    my_rooms:dict = {}
     def connect(self):
         """
             Действие при подключение wss клиентом (рукопожатие)
@@ -13,7 +14,8 @@ class ChatConsumer(WebsocketConsumer):
             Сообщаем тем кто уже есть, сколько теперь людей в комнате
         """
         self.room_name = self.scope['url_route']['kwargs']['room_name']
-        self.room_group_name = 'chat_%s' % self.room_name
+        # TODO: сделать поддрежку unicode или форматирование в ASCII
+        self.room_group_name = self.room_name
 
         # создаем группу и добавляем человека в группу
         async_to_sync(self.channel_layer.group_add)(
@@ -29,9 +31,6 @@ class ChatConsumer(WebsocketConsumer):
         """
             Отключение пользователя
         """
-        if self.room_group_name in self.my_rooms:
-            self.my_rooms[self.room_group_name] -= 1
-
         async_to_sync(self.channel_layer.group_discard)(
             self.room_group_name,
             self.channel_name
@@ -45,9 +44,11 @@ class ChatConsumer(WebsocketConsumer):
         """
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
+        user = text_data_json['user']
         data = {
             'type': 'chat_message',
             'message': message,
+            'user': user
         }
         
         if message.strip() == '':
@@ -65,19 +66,25 @@ class ChatConsumer(WebsocketConsumer):
         if not self.room_group_name in self.my_rooms:
             self.my_rooms[self.room_group_name] = 0
         self.my_rooms[self.room_group_name] += 1
-        data = {
-            'type':'chat_len',
-            'len':self.my_rooms[self.room_group_name]
-        }
-        async_to_sync(self.channel_layer.group_send)(
-            self.room_group_name,
-            data
-        )
+        self._person_room()
+
 
     
     def _rm_person_room(self):
         """
             Убираем человека из комнаты
+        """
+        if self.room_group_name in self.my_rooms:
+            self.my_rooms[self.room_group_name] -= 1
+
+        # self.my_rooms[self.room_group_name] -= 1
+        self._person_room()
+
+
+    def _person_room(self):
+        """
+            Человек в комнате
+            Общая отпрвка сколько человек в комнате
         """
         data = {
             'type':'chat_len',
@@ -117,12 +124,13 @@ class ChatConsumer(WebsocketConsumer):
         """
             Сообщением все пользователем в комнате
         """
-        print('chat_message',event)
         message = event['message']
+        user = event['user']
         
         self.send(text_data=json.dumps({
             'event': "send",
             'message': message,
+            'user': user
         }))
 
 
@@ -130,7 +138,6 @@ class ChatConsumer(WebsocketConsumer):
         """
             Пишем всем сколько людей в комнате
         """
-        print(event)
         self.send(text_data=json.dumps({
             'event': "users_len",
             'len': event['len'],
