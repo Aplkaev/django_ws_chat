@@ -6,13 +6,13 @@
     align-items: center;
 }
 
-.place__border, 
+.place__border,
 .place__input_room {
     /* border: 1px solid; */
     display: flex;
     flex-direction: column;
-    height: 90%;
     width: 100%;
+    height: 80vh;
     max-width: 800px;
     backdrop-filter: #000;
     -webkit-box-shadow: 3px 4px 32px -14px rgba(34, 60, 80, 0.2) inset;
@@ -25,16 +25,27 @@
     -moz-box-shadow: unset;
     box-shadow: unset;
 }
+.place__input {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+.place__input .input-group{
+    flex-wrap: nowrap;
+}
 
+.place__input input[type="text"] {
+    width: 100%;
+}
 .user_len {
     position: absolute;
-    left: 10px;
+    right: 10px;
     bottom: 10px;
 }
 
 .place__messages {
     width: 100%;
-    height: 90vh;
+    height: 100%;
     overflow-y: auto;
 }
 
@@ -45,6 +56,11 @@
 .place__item_message {
     border-radius: 5px;
     padding: 5px;
+}
+
+.item_my{
+    background: rgb(144, 255, 152);
+    text-align: right;
 }
 
 .item_0 {
@@ -86,4 +102,15 @@
 
 .item_9 {
     background: rgb(37, 4, 207);
+}
+
+.room__row{
+    background: #B5E4EE;
+    border-radius: 5px;
+}
+
+.button_back_select_room{
+    position: absolute;
+    top: 10px;
+    left: 10px;
 }
