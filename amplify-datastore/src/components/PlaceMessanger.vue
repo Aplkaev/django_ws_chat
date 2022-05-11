@@ -5,10 +5,12 @@
                 <RoomPlace />
             </div>
             <div v-else class="place__border">
+                <b-button class="button_back_select_room" variant="outline-primary" @click="BackSelectRoom">Назад
+                </b-button>
                 <MessagesView />
                 <InputMessanger />
                 <div class="user_len">
-                    Количество людей в комнате: {{ lenUsersRoom }}
+                    <b-alert show>Количество людей в комнате: {{ lenUsersRoom }}</b-alert>
                 </div>
             </div>
         </div>
@@ -36,8 +38,11 @@
                 methods: {}
             }
         },
-        mounted() {
-
+        methods: {
+            BackSelectRoom() {
+                this.$store.dispatch('SET_Name_room', null);
+                this.socket.disconnect();
+            }
         },
     })
 </script>

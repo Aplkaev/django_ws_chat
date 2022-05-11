@@ -18,7 +18,7 @@
     } from 'vuex'
     export default ({
         name: 'MessagesView',
-        computed: mapGetters(['getMessages']),
+        computed: mapGetters(['getMessages','getMyId']),
         data: function () {
             return {
                 items: [
@@ -34,13 +34,16 @@
                 users_len: 0,
                 methods: {
                     send: (data) => {
-                        // console.log('this', this.items);
-                        // console.log('data', data);
-                        // this.items.push(data);
-                        console.log(this.$store);
+                        // сообщение пришло
+                        console.log(data);
+                        if(data['user'] == this.getMyId){
+                            console.log('my_message');
+                            data.class = 'item_my'
+                        }
                         this.$store.dispatch('SET_Messages', data);
                     },
                     error: (data) => {
+                        // ошибка при отправик сообщении
                         this.$notify({
                             group: 'error_message',
                             title: 'Important message',
@@ -49,81 +52,24 @@
                         });
                     },
                     users_len: (data) => {
+                        // количество людей в комнате
                         this.users_len = data.len;
                         this.$store.state.users_len = this.users_len;
-                    }
+                    },
                 }
             }
         },
         mounted() {
+            this.$store.dispatch('RM_Messages', []);
             this.chatSocket = this.socket.getConnectSocet();
             this.chatSocket.onmessage = (e) => {
                 var data = JSON.parse(e.data);
+                // роут для методов из ws
                 if (this.methods[data['event']]) {
                     this.methods[data['event']](data);
                 }
             };
 
         },
-        hide() {
-            this.socket.disconnect();
-        }
     })
 </script>
-<style scoped>
-    .place__messages {
-        width: 100%;
-        height: 100%;
-        overflow-y: auto;
-    }
-
-    .place__message {
-        margin: 1em;
-    }
-
-    .place__item_message {
-        border-radius: 5px;
-        padding: 5px;
-    }
-
-    .item_0 {
-        background: rgb(247, 93, 34);
-    }
-
-    .item_1 {
-        background: rgb(128, 10, 115);
-        color: #fff;
-    }
-
-    .item_2 {
-        background: rgb(136, 147, 37);
-    }
-
-    .item_3 {
-        background: rgb(110, 2, 253);
-    }
-
-    .item_4 {
-        background: rgb(52, 101, 130);
-    }
-
-    .item_5 {
-        background: rgb(208, 126, 84);
-    }
-
-    .item_6 {
-        background: rgb(237, 111, 254);
-    }
-
-    .item_7 {
-        background: rgb(37, 4, 207);
-    }
-
-    .item_8 {
-        background: rgb(37, 4, 207);
-    }
-
-    .item_9 {
-        background: rgb(37, 4, 207);
-    }
-</style>

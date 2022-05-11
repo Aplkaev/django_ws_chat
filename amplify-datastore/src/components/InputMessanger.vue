@@ -1,15 +1,24 @@
 <template>
     <div>
-        <form action="" class="place__input" @submit.prevent="onSubmit">
-            <input type="text" v-model="message_text">
-            <button>Отправить</button>
+
+        <form action="" @submit.prevent="onSubmit" class="place__input">
+            <b-input-group>
+                <b-form-input v-model="message_text" placeholder="Сообщение"></b-form-input>
+                <b-input-group-append>
+                    <b-button variant="success" type="submit">Отправить</b-button>
+                </b-input-group-append>
+            </b-input-group>
         </form>
 
     </div>
 </template>
 
 <script>
+    import {
+        mapGetters
+    } from 'vuex'
     export default ({
+        computed: mapGetters(['getMyId']),
         name: 'InputMessanger',
         data: function () {
             return {
@@ -18,38 +27,22 @@
                 // // connect ws
                 chatSocket: null,
                 // // название комнаты
-                // roomName: 'test',
             }
         },
         methods: {
             onSubmit() {
-                console.log('submit',this.chatSocket);
-                if(this.chatSocket === undefined || this.chatSocket === null){
+                if (this.chatSocket === undefined || this.chatSocket === null) {
                     this.chatSocket = this.socket.getConnectSocet();
                 }
                 this.chatSocket.send(JSON.stringify({
-                    'message': this.message_text
+                    'message': this.message_text,
+                    'user':this.getMyId
                 }));
-                // this.message_text = '';
+                this.message_text = '';
             },
         },
         mounted() {
             this.chatSocket = this.socket.getConnectSocet();
-        },
-        hide(){
-            this.socket.disconnect();
         }
     })
 </script>
-
-<style scoped>
-    .place__input {
-        display: flex;
-        flex-direction: row;
-        width: 100%;
-    }
-
-    .place__input input[type="text"] {
-        width: 100%;
-    }
-</style>

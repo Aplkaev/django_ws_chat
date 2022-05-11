@@ -3,7 +3,12 @@ export default {
     roomName: 'test',
     // подключение к ws
     _connect: null,
-
+    // url для разные сокетов
+    _urls_sokets:{
+        'chat':'ws://127.0.0.1:8000/ws/chat/',
+        'rooms':'ws://127.0.0.1:8000/ws/rooms/'
+    },
+    _main_ws:'chat',
     setNameRoom(name) {
         /**
          * 
@@ -24,18 +29,29 @@ export default {
         }
         return this._connect;
     },
-    connect() {
+    connect(name = 'chat') {
         /**
          * 
          * Подключение к ws
          * 
          */
-        this._connect = new WebSocket(
-            'ws://127.0.0.1:8000/ws/chat/' + this.roomName + '/');
+        this._connect = new WebSocket(this.getLink(name));
         console.log('done socket', this._connect);
-        this._connect.onclose = function () {
-            console.error('Chat socket closed unexpectedly');
+        this._connect.onclose = () => {
+            this.roomName = null;
         };
+    },
+    getLink(name){
+        if(this._urls_sokets[name] === undefined){
+            return this._urls_sokets[this._main_ws] + this.roomName + '/';
+        }
+
+        if(name==='chat'){
+            return this._urls_sokets[this._main_ws] + this.roomName + '/';
+        }
+
+        return this._urls_sokets[name];
+
     },
     disconnect() {
         /**
@@ -47,5 +63,6 @@ export default {
             return;
         }
         this._connect.close();
+        this._connect = null;
     }
 }

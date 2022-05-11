@@ -12,7 +12,6 @@ export default new Vuex.Store({
              * 
              */
             context.commit('Set_name_room', name);
-
         },
         SET_Messages:(context, messages) => {
             /**
@@ -20,7 +19,23 @@ export default new Vuex.Store({
              * Коммитит изменения сообщений
              * 
              */
-            context.commit('Add_messages', messages);
+            context.commit('Add_messages', messages);            
+        },
+        RM_Messages(context){
+            /**
+             * 
+             * Коммит удаление сообщений из стате
+             * 
+             */
+            context.commit('Rm_messages');
+        },
+        SET_MY_ID(context, id){
+            /**
+             * 
+             * Коммитем id пользователя
+             * 
+             */
+            context.commit('Set_my_id', id);
         }
     },
     mutations:{
@@ -41,6 +56,23 @@ export default new Vuex.Store({
              * 
              */
             state.messages.push(payload)
+        },
+        Rm_messages(state){
+            /**
+             * 
+             * Удаляем сообщения из стате
+             * 
+             */
+            state.messages.splice(0,state.messages.length);
+        },
+        Set_my_id(state, id){
+            /**
+             * 
+             * Задаем id пользователю для чата
+             * 
+             */
+            state.id = id;
+            localStorage.setItem('my_id_client_message',id);
         }
     },
     state:{
@@ -48,7 +80,8 @@ export default new Vuex.Store({
         users_len:0,
         // список сообщений 
         messages:[],
-        roomName:null
+        roomName:null,
+        id:0
     },
     getters:{
         lenUsersRoom(state){
@@ -76,6 +109,22 @@ export default new Vuex.Store({
              * 
              */
             return state.roomName;
+        },
+        getMyId(state){
+            /**
+             * 
+             * Вернем id пользователя
+             * 
+             */
+            if(!state.id || state.id === undefined){
+                let id = localStorage.getItem('my_id_client_message');
+                if(id !== undefined && id){
+                    state.id = id;
+                }else{
+                    state.id = 0;
+                }
+            }
+            return state.id;
         }
     },
     modules:{}
