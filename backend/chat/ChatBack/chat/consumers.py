@@ -40,6 +40,7 @@ class ChatConsumer(WebsocketConsumer):
     def receive(self, text_data):
         """
             Сообщение от пользователя
+            TODO: вынести в отдельные обработчики
         """
         # TODO: переделать на роут для разных событий
         text_data_json = json.loads(text_data)
@@ -49,7 +50,6 @@ class ChatConsumer(WebsocketConsumer):
         }
         if 'event' in text_data_json and text_data_json['event'] == 'connect':
             # подключение нового человека
-            print('asds')
             self._add_person_room(text_data_json['user'])
         
         if 'message' in text_data_json or text_data_json['event'] == 'message':
@@ -65,8 +65,28 @@ class ChatConsumer(WebsocketConsumer):
             if message.strip() == '':
                 data['type'] = 'chat_error'
                 data['message'] = 'Ошибка. Пустое сообщение'
-
+                data['user'] = user
+            else:
+                text_data_json['event'] = 'typing_stop'
             self._send_message(data)
+        
+        if 'event' in text_data_json and text_data_json['event'] == 'typing':
+            user = text_data_json['user']
+            data = {
+                'type':'typing_message',
+                'user':user
+            }
+            self._send_message(data)
+
+        if 'event' in text_data_json and text_data_json['event'] == 'typing_stop':
+            user = text_data_json['user']
+            data = {
+                'type':'typing_message_stop',
+                'user':user
+            }
+            self._send_message(data)
+    
+
 
 
     def _add_person_room(self, user_id = None):
@@ -89,16 +109,21 @@ class ChatConsumer(WebsocketConsumer):
         """
             Убираем человека из комнаты
         """
-        # если нет user_id
-        if user_id is None:
-            return
+        self.my_rooms[self.room_group_name] = set()
+        data = {
+            'type': 'update_person'
+        }
+        self._send_message(data)
 
-        if self.room_group_name in self.my_rooms:
-            if user_id in self.my_rooms[self.room_group_name]:
-                self.my_rooms[self.room_group_name].remove(user_id)
 
-        # self.my_rooms[self.room_group_name] -= 1
-        self._person_room()
+        # # если нет user_id
+        # if user_id is None:
+        #     return
+
+        # if self.room_group_name in self.my_rooms:
+        #     if user_id in self.my_rooms[self.room_group_name]:
+        #         self.my_rooms[self.room_group_name].remove(user_id)
+        # self._person_room()
 
 
     def _person_room(self):
@@ -137,6 +162,7 @@ class ChatConsumer(WebsocketConsumer):
         self.send(text_data=json.dumps({
             'event': "error",
             'message': event['message'],
+            'user': event['user'],
         }))      
 
 
@@ -163,3 +189,31 @@ class ChatConsumer(WebsocketConsumer):
             'len': event['len'],
         }))
 
+
+    def update_person(self, event):
+        """
+            Просим всех в комнате подвердить присудствие
+        """
+        self.send(text_data=json.dumps({
+            'event': "person_confirm"
+        }))
+
+
+    def typing_message(self, event):
+        """
+            Говорим всем кто печатает
+        """
+        self.send(text_data=json.dumps({
+            'event':'typing',
+            'user':event['user']
+        }))
+
+    
+    def typing_message_stop(self, event):
+        """
+            Поле ввода сообщние пустое
+        """
+        self.send(text_data=json.dumps({
+            'event':'typing_stop',
+            'user':event['user']
+        }))
