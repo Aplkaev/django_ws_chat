@@ -3,7 +3,7 @@
 
         <form action="" @submit.prevent="onSubmit" class="place__input">
             <b-input-group>
-                <b-form-input v-model="message_text" placeholder="Сообщение"></b-form-input>
+                <b-form-input v-model="message_text" placeholder="Сообщение" @keydown.native="typing"></b-form-input>
                 <b-input-group-append>
                     <b-button variant="success" type="submit">Отправить</b-button>
                 </b-input-group-append>
@@ -41,6 +41,22 @@
                 }));
                 this.message_text = '';
             },
+            typing() {
+                // поле сообщение не пустое
+                if(this.message_text){
+                    this.chatSocket.send(JSON.stringify({
+                        'event':'typing',
+                        'user':this.getMyId
+                    }));
+                }else{
+                    // пусто поле и "перестаем писать"
+                    this.chatSocket.send(JSON.stringify({
+                        'event':'typing_stop',
+                        'user':this.getMyId
+                    }));
+                }
+
+            }
         },
         mounted() {
             this.chatSocket = this.socket.getConnectSocet();
