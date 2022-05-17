@@ -57,10 +57,12 @@ export default {
         };
     },
     getLink(name){
+        // TODO: удалить
+        // если такого url для scoket нет
         if(this._urls_sokets[name] === undefined){
             return this._urls_sokets[this._main_ws] + this.roomName + '/';
         }
-
+        
         if(name==='chat'){
             return this._urls_sokets[this._main_ws] + this.roomName + '/';
         }
