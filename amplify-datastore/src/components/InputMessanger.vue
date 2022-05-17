@@ -35,6 +35,7 @@
                     this.chatSocket = this.socket.getConnectSocet();
                 }
                 this.chatSocket.send(JSON.stringify({
+                    'event':'message',
                     'message': this.message_text,
                     'user':this.getMyId
                 }));

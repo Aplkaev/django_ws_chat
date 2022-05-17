@@ -64,7 +64,10 @@
                     .get('http://127.0.0.1:8000/api/getMyId/')
                     .then((response) => {  
                         this.$store.dispatch('SET_MY_ID', response.data.id);
+                        this.socket.setMyId(response.data.id);
                     });
+            }else{
+                this.socket.setMyId(this.getMyId);
             }
         },
     })

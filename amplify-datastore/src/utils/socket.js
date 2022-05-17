@@ -9,6 +9,15 @@ export default {
         'rooms':'ws://127.0.0.1:8000/ws/rooms/'
     },
     _main_ws:'chat',
+    _my_id:-1,
+    setMyId(my_id){
+        /**
+         * 
+         * Задаем id пользователя
+         * 
+         */
+        this._my_id = my_id;
+    },
     setNameRoom(name) {
         /**
          * 
@@ -36,7 +45,13 @@ export default {
          * 
          */
         this._connect = new WebSocket(this.getLink(name));
-        console.log('done socket', this._connect);
+        // console.log('done socket', this._connect);
+        this._connect.onopen = () =>{
+            this._connect.send(JSON.stringify({
+                'event':'connect',
+                'user':this._my_id
+            }));
+        }
         this._connect.onclose = () => {
             this.roomName = null;
         };
