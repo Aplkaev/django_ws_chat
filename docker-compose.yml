@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+  web:
+    build: ./backend/chat/ChatBack
+    command: python manage.py runserver loca:8000
+    volumes:
+      - ./ :/web_django
+    ports:
+      - '8000:8000'
+    links:
+      - mysql
+
+
+  mysql:
+    # image: mariadb:10.5.8
+    image: arm64v8/mysql:oracle
+    command: --default-authentication-plugin=mysql_native_password
+    # image: mysql:5.7
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_DATABASE: 'db_django_chat'
+      MYSQL_USER: 'django_chat'
+      MYSQL_PASSWORD: 'root'
+      MYSQL_ROOT_PASSWORD: 'root'
+    restart: always
+    volumes:
+      - ./backend/db_django:/var/lib/mysql
+
+
+  redis:
+    image: redis:latest
+    ports:
+      - '6379:6379'
+
+
+  frontend:
+    restart: always
+    build:  
+      context: ./amplify-datastore
+    volumes:
+      - ./amplify-datastore/nginx:/etc/nginx/conf.d
+    ports:
+      - 80:80
+
+# https://habr.com/ru/post/519912/
+# docker-compose up -d
+# docker-compose down --rmi all

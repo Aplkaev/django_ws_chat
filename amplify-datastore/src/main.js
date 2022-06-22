@@ -26,6 +26,8 @@ Vue.use(IconsPlugin);
  * https://bootstrap-vue.org/docs
  */
 
+axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+
 
 /**
  * 

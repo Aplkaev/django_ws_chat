@@ -1,9 +1,10 @@
 .place__conteiner {
     width: 100vw;
-    height: 100%;
+    height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: center;
+    max-width: 800px;
+    margin: auto;
 }
 
 .place__border,
@@ -12,9 +13,8 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: 80vh;
-    max-width: 800px;
-    backdrop-filter: #000;
+    height: 100%;
+    backdrop-filter: #000000;
     -webkit-box-shadow: 3px 4px 32px -14px rgba(34, 60, 80, 0.2) inset;
     -moz-box-shadow: 3px 4px 32px -14px rgba(34, 60, 80, 0.2) inset;
     box-shadow: 3px 4px 32px -14px rgba(34, 60, 80, 0.2) inset;
@@ -25,22 +25,28 @@
     -moz-box-shadow: unset;
     box-shadow: unset;
 }
+
 .place__input {
     display: flex;
     flex-direction: row;
     width: 100%;
 }
-.place__input .input-group{
+
+.place__input .input-group {
     flex-wrap: nowrap;
 }
 
 .place__input input[type="text"] {
     width: 100%;
 }
+
 .user_len {
-    position: absolute;
     right: 10px;
     bottom: 10px;
+}
+
+.user_len .alert{
+    margin-bottom: 0px;
 }
 
 .place__messages {
@@ -50,8 +56,9 @@
     position: relative;
 }
 
-.place__message_typing{
+.place__message_typing {
     bottom: 0;
+    transition: 1s;
 }
 
 .place__message {
@@ -63,7 +70,7 @@
     padding: 5px;
 }
 
-.item_my{
+.item_my {
     background: rgb(144, 255, 152);
     text-align: right;
 }
@@ -109,13 +116,17 @@
     background: rgb(37, 4, 207);
 }
 
-.room__row{
+.room__row {
     background: #B5E4EE;
     border-radius: 5px;
 }
 
-.button_back_select_room{
-    position: absolute;
+.button_back_select_room {
+    /*position: absolute;*/
     top: 10px;
     left: 10px;
+}
+
+.nav {
+    border-bottom: 1px solid #f2f2f2;
 }

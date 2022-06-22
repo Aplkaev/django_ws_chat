@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+# import pymysql
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -83,6 +84,14 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'db_django_chat',
+    #     'USER': 'root',
+    #     'PASSWORD': 'root',
+    #     'HOST': 'mysql',
+    #     'PORT': '3306',
+    # }
 }
 
 
@@ -140,7 +149,11 @@ CHANNEL_LAYERS = {
 
 # cors
 CORS_ALLOWED_ORIGINS  =  [  
-    "http://localhost:8080" , 
+    "http://localhost:8000" ,
+    "http://localhost:80" ,
+    "http://localhost:8080" ,
     "http://127.0.0.1:8080" , 
     "http://127.0.0.1:9000" , 
 ]
+
+ALLOWED_HOSTS = ['0.0.0.0']
